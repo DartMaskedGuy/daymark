@@ -6,14 +6,21 @@ import '../../features/memories/pages/memories_page.dart';
 import '../../features/add_item/pages/add_item_page.dart';
 import '../../features/item_details/pages/item_details_page.dart';
 import '../../features/settings/pages/settings_page.dart';
+import '../../features/splash/pages/splash_page.dart';
 import 'app_shell.dart';
 
 /// Root navigation graph. The bottom-nav tabs (home, bucket-list, memories)
 /// live under a StatefulShellRoute so each tab keeps its own scroll/state,
 /// and the selected nav index always matches the current route.
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/',
+  // initialLocation: '/',
+  initialLocation: '/splash',
   routes: [
+    GoRoute(
+      path: '/splash',
+      builder: (context, state) =>
+          SplashPage(onFinished: () => appRouter.go('/')),
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) =>
           AppShell(navigationShell: navigationShell),
