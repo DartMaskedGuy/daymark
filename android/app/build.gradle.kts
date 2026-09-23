@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.salary4.daymark"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
     compileOptions {

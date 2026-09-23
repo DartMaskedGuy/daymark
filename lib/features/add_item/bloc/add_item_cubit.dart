@@ -105,7 +105,6 @@
 //     }
 //   }
 // }
-
 import 'package:drift/drift.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -114,18 +113,26 @@ import '../../../core/constants/item_categories.dart';
 import '../../../data/database/app_database.dart';
 import '../../../data/repositories/bucket_list_repository.dart';
 import '../../../data/repositories/media_repository.dart';
+import '../../../data/services/media_storage_service.dart';
 
 part 'add_item_state.dart';
 
 /// Drives the Add/Edit Item screen. Only title is required — every other
 /// field, including location, stays optional per the product spec.
 ///
-/// Image handling has two paths, because a new item has no id yet:
-/// - Editing an existing item: a picked photo is written to [MediaRepository]
-///   immediately, independent of the "Save changes" button.
-/// - Creating a new item: picked photos sit in [AddItemState.pendingImagePaths]
-///   and are only persisted once [save] creates the item and has an id
-///   to attach them to.
+/// Every picked image is copied into permanent app storage via
+/// [MediaStorageService] the moment it's picked — not deferred to save —
+/// so [AddItemState.pendingImagePaths] and [AddItemState.existingMedia]
+/// always hold paths that are genuinely persisted, never the picker's raw
+/// (often transient) path.
+///
+/// Where the DB row goes still differs by flow, because a new item has no
+/// id yet:
+/// - Editing an existing item: the persisted file is written to
+///   [MediaRepository] immediately, independent of "Save changes".
+/// - Creating a new item: the persisted path sits in [pendingImagePaths]
+///   and is only attached to the item once [save] creates it and has an
+///   id to attach to.
 class AddItemCubit extends Cubit<AddItemState> {
   AddItemCubit(this._repository, this._mediaRepository, {this.existingId})
     : super(const AddItemState()) {
@@ -136,6 +143,7 @@ class AddItemCubit extends Cubit<AddItemState> {
   final MediaRepository _mediaRepository;
   final String? existingId;
   final ImagePicker _picker = ImagePicker();
+  final MediaStorageService _mediaStorage = MediaStorageService();
 
   Future<void> _loadExisting() async {
     final item = await _repository.getById(existingId!);
@@ -179,12 +187,17 @@ class AddItemCubit extends Cubit<AddItemState> {
       final picked = await _picker.pickMultiImage();
       if (picked.isEmpty) return;
 
+      final persistedPaths = <String>[];
+      for (final file in picked) {
+        persistedPaths.add(await _mediaStorage.persistFile(file.path));
+      }
+
       if (existingId != null) {
-        for (final file in picked) {
+        for (final path in persistedPaths) {
           await _mediaRepository.addMedia(
             itemId: existingId!,
             type: 'image',
-            path: file.path,
+            path: path,
           );
         }
         final media = await _mediaRepository.watchForItem(existingId!).first;
@@ -192,10 +205,7 @@ class AddItemCubit extends Cubit<AddItemState> {
       } else {
         emit(
           state.copyWith(
-            pendingImagePaths: [
-              ...state.pendingImagePaths,
-              ...picked.map((file) => file.path),
-            ],
+            pendingImagePaths: [...state.pendingImagePaths, ...persistedPaths],
           ),
         );
       }
@@ -209,6 +219,7 @@ class AddItemCubit extends Cubit<AddItemState> {
   }
 
   void removePendingImage(String path) {
+    _mediaStorage.deleteFile(path);
     emit(
       state.copyWith(
         pendingImagePaths: state.pendingImagePaths
@@ -220,7 +231,9 @@ class AddItemCubit extends Cubit<AddItemState> {
 
   Future<void> removeExistingMedia(String id) async {
     try {
+      final media = state.existingMedia.firstWhere((m) => m.id == id);
       await _mediaRepository.removeMedia(id);
+      await _mediaStorage.deleteFile(media.path);
       emit(
         state.copyWith(
           existingMedia: state.existingMedia.where((m) => m.id != id).toList(),
