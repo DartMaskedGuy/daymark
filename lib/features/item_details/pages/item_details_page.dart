@@ -357,7 +357,16 @@ class _ItemDetailsView extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(item.title, style: theme.textTheme.displaySmall),
+                        // Text(item.title, style: theme.textTheme.displaySmall),
+                        Text(
+                          item.title,
+                          style: const TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.darkSurface,
+                            height: 1.2,
+                          ),
+                        ),
                         const SizedBox(height: AppSpacing.sm),
                         Wrap(
                           spacing: AppSpacing.sm,
