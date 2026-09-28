@@ -311,15 +311,39 @@ class _ItemDetailsView extends StatelessWidget {
 
             return CustomScrollView(
               slivers: [
+                // App Bar
+                SliverAppBar(
+                  pinned: true,
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                  surfaceTintColor: Colors.transparent,
+                  leading: Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: _ScrimIconButton(
+                      icon: Icons.arrow_back,
+                      onTap: () => context.pop(),
+                    ),
+                  ),
+                  actions: [
+                    _ScrimIconButton(
+                      icon: Icons.edit_outlined,
+                      onTap: () => context.push('/bucket-list/${item.id}/edit'),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                    _ScrimIconButton(
+                      icon: Icons.delete_outline,
+                      onTap: () => _confirmDelete(context),
+                    ),
+                    const SizedBox(width: AppSpacing.sm),
+                  ],
+                ),
+
                 SliverToBoxAdapter(
                   child: _Hero(
                     media: state.media,
                     accent: accent,
                     category: item.category,
                     isCompleted: item.isCompleted,
-                    onBack: () => context.pop(),
-                    onEdit: () => context.push('/bucket-list/${item.id}/edit'),
-                    onDelete: () => _confirmDelete(context),
                   ),
                 ),
                 SliverToBoxAdapter(
@@ -448,18 +472,12 @@ class _Hero extends StatefulWidget {
     required this.accent,
     required this.category,
     required this.isCompleted,
-    required this.onBack,
-    required this.onEdit,
-    required this.onDelete,
   });
 
   final List<MediaItem> media;
   final Color accent;
   final String category;
   final bool isCompleted;
-  final VoidCallback onBack;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
 
   @override
   State<_Hero> createState() => _HeroState();
@@ -594,8 +612,8 @@ class _HeroState extends State<_Hero> {
 
           if (widget.isCompleted)
             Positioned(
-              top: AppSpacing.xl,
-              right: AppSpacing.lg,
+              top: AppSpacing.md,
+              right: AppSpacing.md,
               child: Transform.rotate(
                 angle: -0.28,
                 child: Container(
@@ -624,37 +642,6 @@ class _HeroState extends State<_Hero> {
                 ),
               ),
             ),
-
-          SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.sm,
-                vertical: AppSpacing.xs,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _ScrimIconButton(
-                    icon: Icons.arrow_back,
-                    onTap: widget.onBack,
-                  ),
-                  Row(
-                    children: [
-                      _ScrimIconButton(
-                        icon: Icons.edit_outlined,
-                        onTap: widget.onEdit,
-                      ),
-                      const SizedBox(width: AppSpacing.sm),
-                      _ScrimIconButton(
-                        icon: Icons.delete_outline,
-                        onTap: widget.onDelete,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
         ],
       ),
     );
