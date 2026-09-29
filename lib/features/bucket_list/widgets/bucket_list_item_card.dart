@@ -116,14 +116,6 @@ import '../../../app/theme/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
 import '../../../data/database/app_database.dart';
 
-/// Compact card for one bucket-list item.
-///
-/// Two separate color cues are deliberately kept apart: the item's own
-/// chosen color drives its icon badge (identity), while priority is a
-/// small semantic dot (red/amber/muted) that never touches that color —
-/// so "what this item is" and "how urgent it is" don't compete for the
-/// same hue. Completed items desaturate and gain a strike-through, so
-/// scanning the "All" tab reads lived-vs-ahead at a glance.
 class BucketListItemCard extends StatelessWidget {
   const BucketListItemCard({
     super.key,
