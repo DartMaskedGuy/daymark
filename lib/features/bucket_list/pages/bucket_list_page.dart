@@ -247,7 +247,8 @@ class _BucketListView extends StatelessWidget {
     final theme = Theme.of(context);
     return Scaffold(
       body: SafeArea(
-        bottom: false,
+        // top: false,
+        // bottom: ,
         child: Column(
           children: [
             Padding(
@@ -458,10 +459,13 @@ class _BucketListView extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => context.push('/bucket-list/add'),
-        icon: const Icon(Icons.add),
-        label: const Text('Add'),
+      floatingActionButton: Padding(
+        padding: const EdgeInsetsGeometry.only(bottom: 80),
+        child: FloatingActionButton.extended(
+          onPressed: () => context.push('/bucket-list/add'),
+          icon: const Icon(Icons.add),
+          label: const Text('Add'),
+        ),
       ),
     );
   }

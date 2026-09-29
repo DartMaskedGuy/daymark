@@ -22,67 +22,72 @@ class _FilterSheetState extends State<FilterSheet> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Padding(
-      padding: EdgeInsets.only(
-        left: AppSpacing.lg,
-        right: AppSpacing.lg,
-        top: AppSpacing.lg,
-        bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.lg,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Filters', style: theme.textTheme.headlineSmall),
-              TextButton(
-                onPressed: () => setState(() {
-                  _category = null;
-                  _priority = null;
-                }),
-                child: const Text('Clear all'),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.md),
-          Text('Category', style: theme.textTheme.titleMedium),
-          const SizedBox(height: AppSpacing.sm),
-          Wrap(
-            spacing: AppSpacing.sm,
-            children: ItemCategory.values.map((c) {
-              return ChoiceChip(
-                label: Text(c.label),
-                selected: _category == c,
-                onSelected: (_) => setState(() => _category = _category == c ? null : c),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          Text('Priority', style: theme.textTheme.titleMedium),
-          const SizedBox(height: AppSpacing.sm),
-          Wrap(
-            spacing: AppSpacing.sm,
-            children: ItemPriority.values.map((p) {
-              return ChoiceChip(
-                label: Text(p.label),
-                selected: _priority == p,
-                onSelected: (_) => setState(() => _priority = _priority == p ? null : p),
-              );
-            }).toList(),
-          ),
-          const SizedBox(height: AppSpacing.lg),
-          SizedBox(
-            width: double.infinity,
-            child: FilledButton(
-              onPressed: () => Navigator.of(context).pop(
-                BucketListFilters(category: _category, priority: _priority),
-              ),
-              child: const Text('Apply filters'),
+    return SafeArea(
+      top: false,
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: AppSpacing.lg,
+          right: AppSpacing.lg,
+          top: AppSpacing.lg,
+          bottom: MediaQuery.of(context).viewInsets.bottom + AppSpacing.sm,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('Filters', style: theme.textTheme.headlineSmall),
+                TextButton(
+                  onPressed: () => setState(() {
+                    _category = null;
+                    _priority = null;
+                  }),
+                  child: const Text('Clear all'),
+                ),
+              ],
             ),
-          ),
-        ],
+            const SizedBox(height: AppSpacing.md),
+            Text('Category', style: theme.textTheme.titleMedium),
+            const SizedBox(height: AppSpacing.sm),
+            Wrap(
+              spacing: AppSpacing.sm,
+              children: ItemCategory.values.map((c) {
+                return ChoiceChip(
+                  label: Text(c.label),
+                  selected: _category == c,
+                  onSelected: (_) =>
+                      setState(() => _category = _category == c ? null : c),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            Text('Priority', style: theme.textTheme.titleMedium),
+            const SizedBox(height: AppSpacing.sm),
+            Wrap(
+              spacing: AppSpacing.sm,
+              children: ItemPriority.values.map((p) {
+                return ChoiceChip(
+                  label: Text(p.label),
+                  selected: _priority == p,
+                  onSelected: (_) =>
+                      setState(() => _priority = _priority == p ? null : p),
+                );
+              }).toList(),
+            ),
+            const SizedBox(height: AppSpacing.lg),
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton(
+                onPressed: () => Navigator.of(context).pop(
+                  BucketListFilters(category: _category, priority: _priority),
+                ),
+                child: const Text('Apply filters'),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

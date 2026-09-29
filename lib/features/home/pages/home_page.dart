@@ -40,25 +40,28 @@ class _HomeView extends StatelessWidget {
         body: BlocBuilder<HomeCubit, HomeState>(
           builder: (context, state) {
             final loading = state.status == HomeStatus.loading;
-            return ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                SkyHero(
-                  greeting: _greeting,
-                  completed: state.completed,
-                  total: state.total,
-                  progress: state.progress,
-                  loading: loading,
-                  onSettings: () => context.push('/settings'),
-                ),
-                if (state.status == HomeStatus.error)
-                  const Padding(
-                    padding: EdgeInsets.all(AppSpacing.md),
-                    child: _ErrorNote(),
-                  )
-                else if (!loading)
-                  ..._sections(context, state),
-              ],
+            return SafeArea(
+              top: false,
+              child: ListView(
+                padding: EdgeInsets.zero,
+                children: [
+                  SkyHero(
+                    greeting: _greeting,
+                    completed: state.completed,
+                    total: state.total,
+                    progress: state.progress,
+                    loading: loading,
+                    onSettings: () => context.push('/settings'),
+                  ),
+                  if (state.status == HomeStatus.error)
+                    const Padding(
+                      padding: EdgeInsets.all(AppSpacing.md),
+                      child: _ErrorNote(),
+                    )
+                  else if (!loading)
+                    ..._sections(context, state),
+                ],
+              ),
             );
           },
         ),
