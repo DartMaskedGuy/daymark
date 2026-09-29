@@ -309,158 +309,163 @@ class _ItemDetailsView extends StatelessWidget {
               item.country,
             ].where((s) => s != null && s.isNotEmpty).join(', ');
 
-            return CustomScrollView(
-              slivers: [
-                // App Bar
-                SliverAppBar(
-                  pinned: true,
-                  elevation: 0,
-                  backgroundColor: Colors.transparent,
-                  surfaceTintColor: Colors.transparent,
-                  leading: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: _ScrimIconButton(
-                      icon: Icons.arrow_back,
-                      onTap: () => context.pop(),
+            return SafeArea(
+              top: false,
+              child: CustomScrollView(
+                slivers: [
+                  // App Bar
+                  SliverAppBar(
+                    pinned: true,
+                    elevation: 0,
+                    backgroundColor: theme.colorScheme.surface,
+                    surfaceTintColor: Colors.transparent,
+                    leading: Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: _ScrimIconButton(
+                        icon: Icons.arrow_back,
+                        onTap: () => context.pop(),
+                      ),
                     ),
+                    actions: [
+                      _ScrimIconButton(
+                        icon: Icons.edit_outlined,
+                        onTap: () =>
+                            context.push('/bucket-list/${item.id}/edit'),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                      _ScrimIconButton(
+                        icon: Icons.delete_outline,
+                        onTap: () => _confirmDelete(context),
+                      ),
+                      const SizedBox(width: AppSpacing.sm),
+                    ],
                   ),
-                  actions: [
-                    _ScrimIconButton(
-                      icon: Icons.edit_outlined,
-                      onTap: () => context.push('/bucket-list/${item.id}/edit'),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                    _ScrimIconButton(
-                      icon: Icons.delete_outline,
-                      onTap: () => _confirmDelete(context),
-                    ),
-                    const SizedBox(width: AppSpacing.sm),
-                  ],
-                ),
 
-                SliverToBoxAdapter(
-                  child: _Hero(
-                    media: state.media,
-                    accent: accent,
-                    category: item.category,
-                    isCompleted: item.isCompleted,
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      AppSpacing.md,
-                      AppSpacing.lg,
-                      AppSpacing.md,
-                      AppSpacing.xxl,
+                  SliverToBoxAdapter(
+                    child: _Hero(
+                      media: state.media,
+                      accent: accent,
+                      category: item.category,
+                      isCompleted: item.isCompleted,
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Text(item.title, style: theme.textTheme.displaySmall),
-                        Text(
-                          item.title,
-                          style: const TextStyle(
-                            fontSize: 30,
-                            fontWeight: FontWeight.w900,
-                            color: AppColors.darkSurface,
-                            height: 1.2,
+                  ),
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        AppSpacing.md,
+                        AppSpacing.lg,
+                        AppSpacing.md,
+                        AppSpacing.xxl,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Text(item.title, style: theme.textTheme.displaySmall),
+                          Text(
+                            item.title,
+                            style: const TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.darkSurface,
+                              height: 1.2,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: AppSpacing.sm),
-                        Wrap(
-                          spacing: AppSpacing.sm,
-                          children: [
-                            Chip(
-                              label: Text(item.category),
-                              backgroundColor: accent.withValues(alpha: 0.15),
-                              side: BorderSide.none,
-                            ),
-                            Chip(
-                              label: Text('${item.priority} Priority'),
-                              side: BorderSide.none,
-                            ),
-                          ],
-                        ),
-                        if (location.isNotEmpty || item.targetDate != null) ...[
-                          const SizedBox(height: AppSpacing.lg),
-                          Row(
+                          const SizedBox(height: AppSpacing.sm),
+                          Wrap(
+                            spacing: AppSpacing.sm,
                             children: [
-                              if (location.isNotEmpty)
-                                Expanded(
-                                  child: _FactTile(
-                                    icon: Icons.place_outlined,
-                                    label: 'Location',
-                                    value: location,
-                                  ),
-                                ),
-                              if (location.isNotEmpty &&
-                                  item.targetDate != null)
-                                const SizedBox(width: AppSpacing.sm),
-                              if (item.targetDate != null)
-                                Expanded(
-                                  child: _FactTile(
-                                    icon: Icons.event_outlined,
-                                    label: 'Target',
-                                    value:
-                                        '${item.targetDate!.month}/${item.targetDate!.year}',
-                                  ),
-                                ),
+                              Chip(
+                                label: Text(item.category),
+                                backgroundColor: accent.withValues(alpha: 0.15),
+                                side: BorderSide.none,
+                              ),
+                              Chip(
+                                label: Text('${item.priority} Priority'),
+                                side: BorderSide.none,
+                              ),
                             ],
                           ),
-                        ],
-                        if (item.description != null &&
-                            item.description!.isNotEmpty) ...[
-                          const SizedBox(height: AppSpacing.lg),
-                          Text(
-                            'Description',
-                            style: theme.textTheme.titleMedium,
-                          ),
-                          const SizedBox(height: AppSpacing.xs),
-                          Text(
-                            item.description!,
-                            style: theme.textTheme.bodyLarge,
-                          ),
-                        ],
-                        if (state.links.isNotEmpty) ...[
-                          const SizedBox(height: AppSpacing.lg),
-                          Text('Links', style: theme.textTheme.titleMedium),
-                          const SizedBox(height: AppSpacing.xs),
-                          ...state.links.map(
-                            (link) => ListTile(
-                              contentPadding: EdgeInsets.zero,
-                              leading: const Icon(Icons.link),
-                              title: Text(link.title),
-                              onTap: () => launchUrl(Uri.parse(link.url)),
-                            ),
-                          ),
-                        ],
-                        const SizedBox(height: AppSpacing.lg),
-                        _StatusCard(item: item, accent: accent),
-                        const SizedBox(height: AppSpacing.lg),
-                        SizedBox(
-                          width: double.infinity,
-                          child: item.isCompleted
-                              ? OutlinedButton(
-                                  onPressed: () => _handleToggle(context),
-                                  child: const Text('Mark as incomplete'),
-                                )
-                              : FilledButton(
-                                  style: FilledButton.styleFrom(
-                                    backgroundColor:
-                                        theme.brightness == Brightness.dark
-                                        ? AppColors.darkSuccess
-                                        : AppColors.lightSuccess,
+                          if (location.isNotEmpty ||
+                              item.targetDate != null) ...[
+                            const SizedBox(height: AppSpacing.lg),
+                            Row(
+                              children: [
+                                if (location.isNotEmpty)
+                                  Expanded(
+                                    child: _FactTile(
+                                      icon: Icons.place_outlined,
+                                      label: 'Location',
+                                      value: location,
+                                    ),
                                   ),
-                                  onPressed: () => _handleToggle(context),
-                                  child: const Text('Mark as completed'),
-                                ),
-                        ),
-                      ],
+                                if (location.isNotEmpty &&
+                                    item.targetDate != null)
+                                  const SizedBox(width: AppSpacing.sm),
+                                if (item.targetDate != null)
+                                  Expanded(
+                                    child: _FactTile(
+                                      icon: Icons.event_outlined,
+                                      label: 'Target',
+                                      value:
+                                          '${item.targetDate!.month}/${item.targetDate!.year}',
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ],
+                          if (item.description != null &&
+                              item.description!.isNotEmpty) ...[
+                            const SizedBox(height: AppSpacing.lg),
+                            Text(
+                              'Description',
+                              style: theme.textTheme.titleMedium,
+                            ),
+                            const SizedBox(height: AppSpacing.xs),
+                            Text(
+                              item.description!,
+                              style: theme.textTheme.bodyLarge,
+                            ),
+                          ],
+                          if (state.links.isNotEmpty) ...[
+                            const SizedBox(height: AppSpacing.lg),
+                            Text('Links', style: theme.textTheme.titleMedium),
+                            const SizedBox(height: AppSpacing.xs),
+                            ...state.links.map(
+                              (link) => ListTile(
+                                contentPadding: EdgeInsets.zero,
+                                leading: const Icon(Icons.link),
+                                title: Text(link.title),
+                                onTap: () => launchUrl(Uri.parse(link.url)),
+                              ),
+                            ),
+                          ],
+                          const SizedBox(height: AppSpacing.lg),
+                          _StatusCard(item: item, accent: accent),
+                          const SizedBox(height: AppSpacing.lg),
+                          SizedBox(
+                            width: double.infinity,
+                            child: item.isCompleted
+                                ? OutlinedButton(
+                                    onPressed: () => _handleToggle(context),
+                                    child: const Text('Mark as incomplete'),
+                                  )
+                                : FilledButton(
+                                    style: FilledButton.styleFrom(
+                                      backgroundColor:
+                                          theme.brightness == Brightness.dark
+                                          ? AppColors.darkSuccess
+                                          : AppColors.lightSuccess,
+                                    ),
+                                    onPressed: () => _handleToggle(context),
+                                    child: const Text('Mark as completed'),
+                                  ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             );
           },
         ),
