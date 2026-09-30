@@ -351,7 +351,7 @@ class _BucketListItemCardState extends State<BucketListItemCard> {
             color: scheme.surfaceContainerLow,
             borderRadius: BorderRadius.circular(26),
             border: Border.all(
-              color: scheme.outlineVariant.withValues(alpha: 0.45),
+              color: scheme.outlineVariant.withValues(alpha: 0.2),
             ),
             boxShadow: [
               BoxShadow(
@@ -587,8 +587,8 @@ class _CompletionToggle extends StatelessWidget {
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 260),
           curve: Curves.easeOutBack,
-          width: 32,
-          height: 32,
+          width: 25,
+          height: 25,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: completed
