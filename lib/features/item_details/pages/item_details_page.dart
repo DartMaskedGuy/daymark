@@ -1315,7 +1315,7 @@ class _JourneyCard extends StatelessWidget {
                         size: 28,
                       ),
                     ),
-                    const SizedBox(width: 16),
+                    const SizedBox(width: 10),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1328,12 +1328,12 @@ class _JourneyCard extends StatelessWidget {
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                          const SizedBox(height: 4),
+                          const SizedBox(height: 2),
                           Text(
                             completedAt != null
                                 ? DateFormat('MMMM d, y').format(completedAt)
                                 : 'Completed',
-                            style: theme.textTheme.titleLarge?.copyWith(
+                            style: theme.textTheme.titleMedium?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.w800,
                               letterSpacing: -0.2,
@@ -1430,9 +1430,9 @@ class _ActionBar extends StatelessWidget {
     return Container(
       padding: EdgeInsets.fromLTRB(
         AppSpacing.md,
-        12,
+        10,
         AppSpacing.md,
-        12 + MediaQuery.paddingOf(context).bottom,
+        10 + MediaQuery.paddingOf(context).bottom,
       ),
       decoration: BoxDecoration(
         color: scheme.surface,
@@ -1443,9 +1443,9 @@ class _ActionBar extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
         curve: Curves.easeOutCubic,
-        height: 58,
+        height: 48,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(15),
           gradient: isCompleted
               ? null
               : LinearGradient(colors: [success, _darken(success, 0.35)]),
@@ -1480,7 +1480,7 @@ class _ActionBar extends StatelessWidget {
                     isCompleted
                         ? Icons.undo_rounded
                         : Icons.check_circle_rounded,
-                    size: 21,
+                    size: 16,
                     color: isCompleted ? scheme.onSurface : Colors.white,
                   ),
                   const SizedBox(width: 10),
@@ -1489,6 +1489,7 @@ class _ActionBar extends StatelessWidget {
                     style: theme.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.w800,
                       letterSpacing: 0.3,
+                      fontSize: 14,
                       color: isCompleted ? scheme.onSurface : Colors.white,
                     ),
                   ),

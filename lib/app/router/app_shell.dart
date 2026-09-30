@@ -1,45 +1,3 @@
-// import 'package:flutter/material.dart';
-// import 'package:go_router/go_router.dart';
-
-// /// Bottom-navigation scaffold shared by the three primary tabs. Settings is
-// /// reachable from Home rather than occupying a fourth permanent tab.
-// class AppShell extends StatelessWidget {
-//   const AppShell({super.key, required this.navigationShell});
-
-//   final StatefulNavigationShell navigationShell;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       body: navigationShell,
-//       bottomNavigationBar: NavigationBar(
-//         selectedIndex: navigationShell.currentIndex,
-//         onDestinationSelected: (index) => navigationShell.goBranch(
-//           index,
-//           initialLocation: index == navigationShell.currentIndex,
-//         ),
-//         destinations: const [
-//           NavigationDestination(
-//             icon: Icon(Icons.home_outlined),
-//             selectedIcon: Icon(Icons.home),
-//             label: 'Home',
-//           ),
-//           NavigationDestination(
-//             icon: Icon(Icons.checklist_outlined),
-//             selectedIcon: Icon(Icons.checklist),
-//             label: 'Bucket List',
-//           ),
-//           NavigationDestination(
-//             icon: Icon(Icons.photo_library_outlined),
-//             selectedIcon: Icon(Icons.photo_library),
-//             label: 'Memories',
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -52,6 +10,7 @@ class AppShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       extendBody: true,
       body: navigationShell,
       bottomNavigationBar: _FloatingNavBar(
@@ -93,16 +52,7 @@ class _FloatingNavBar extends StatelessWidget {
     final theme = Theme.of(context);
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(
-        // AppSpacing.lg,
-        // 0,
-        // AppSpacing.lg,
-        // AppSpacing.sm,
-        15,
-        0,
-        15,
-        0,
-      ),
+      padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
       child: SafeArea(
         top: false,
         child: ClipRRect(
@@ -205,7 +155,7 @@ class _NavItem extends StatelessWidget {
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: color,
                         fontWeight: FontWeight.w700,
-                        fontSize: 12.5,
+                        fontSize: 11,
                       ),
                     ),
                   ),
