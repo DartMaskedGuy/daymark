@@ -20,7 +20,8 @@ class SkyHero extends StatefulWidget {
     required this.total,
     required this.progress,
     required this.loading,
-    required this.onSettings,
+    this.onSettings,
+    this.hideAppBar = false,
   });
 
   final String greeting;
@@ -28,7 +29,8 @@ class SkyHero extends StatefulWidget {
   final int total;
   final double progress;
   final bool loading;
-  final VoidCallback onSettings;
+  final VoidCallback? onSettings;
+  final bool hideAppBar;
 
   @override
   State<SkyHero> createState() => _SkyHeroState();
@@ -99,18 +101,17 @@ class _SkyHeroState extends State<SkyHero> with TickerProviderStateMixin {
               ),
             ),
           ),
-          SafeArea(
-            bottom: false,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(
-                AppSpacing.lg,
-                AppSpacing.sm,
-                AppSpacing.lg,
-                56,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.lg,
+              10,
+              AppSpacing.lg,
+              50,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (!widget.hideAppBar) ...[
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -153,48 +154,48 @@ class _SkyHeroState extends State<SkyHero> with TickerProviderStateMixin {
                     ],
                   ),
                   const SizedBox(height: AppSpacing.lg),
-                  Text(
-                    // widget.greeting.replaceFirst(' ', '\n'),
-                    widget.greeting,
-                    style: theme.textTheme.displaySmall?.copyWith(
-                      color: Colors.white,
-                      fontSize: 30,
-                      height: 1.12,
-                      letterSpacing: 1,
+                ],
+                Text(
+                  // widget.greeting.replaceFirst(' ', '\n'),
+                  widget.greeting,
+                  style: theme.textTheme.displaySmall?.copyWith(
+                    color: Colors.white,
+                    fontSize: 30,
+                    height: 1.12,
+                    letterSpacing: 1,
+                  ),
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 200),
+                  child: Text(
+                    'Your journey, one mark at a time.',
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: Colors.white.withValues(alpha: 0.72),
                     ),
                   ),
-                  const SizedBox(height: AppSpacing.sm),
-                  ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 200),
-                    child: Text(
-                      'Your journey, one mark at a time.',
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color: Colors.white.withValues(alpha: 0.72),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: AppSpacing.xl),
-                  AnimatedOpacity(
-                    opacity: widget.loading ? 0 : 1,
-                    duration: const Duration(milliseconds: 400),
-                    child: widget.total == 0
-                        ? _EmptyJourney(theme: theme)
-                        : Semantics(
-                            label:
-                                '${widget.completed} of ${widget.total} experiences lived, $percent percent',
-                            child: ExcludeSemantics(
-                              child: _JourneyBlock(
-                                theme: theme,
-                                completed: widget.completed,
-                                total: widget.total,
-                                progress: widget.progress,
-                                percent: percent,
-                              ),
+                ),
+                const SizedBox(height: AppSpacing.xl),
+                AnimatedOpacity(
+                  opacity: widget.loading ? 0 : 1,
+                  duration: const Duration(milliseconds: 400),
+                  child: widget.total == 0
+                      ? _EmptyJourney(theme: theme)
+                      : Semantics(
+                          label:
+                              '${widget.completed} of ${widget.total} experiences lived, $percent percent',
+                          child: ExcludeSemantics(
+                            child: _JourneyBlock(
+                              theme: theme,
+                              completed: widget.completed,
+                              total: widget.total,
+                              progress: widget.progress,
+                              percent: percent,
                             ),
                           ),
-                  ),
-                ],
-              ),
+                        ),
+                ),
+              ],
             ),
           ),
         ],

@@ -40,28 +40,101 @@ class _HomeView extends StatelessWidget {
         body: BlocBuilder<HomeCubit, HomeState>(
           builder: (context, state) {
             final loading = state.status == HomeStatus.loading;
-            return SafeArea(
-              top: false,
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  SkyHero(
+            return CustomScrollView(
+              slivers: [
+                SliverAppBar(
+                  pinned: true,
+                  elevation: 0,
+                  backgroundColor: Colors.transparent,
+                  automaticallyImplyLeading: false,
+                  toolbarHeight: 56,
+                  flexibleSpace: FlexibleSpaceBar(
+                    background: Container(
+                      color: const Color(0xFF0E0D2B),
+                      child: SafeArea(
+                        top: true,
+                        bottom: false,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: AppSpacing.lg,
+                            vertical: AppSpacing.sm,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    width: 8,
+                                    height: 8,
+                                    decoration: const BoxDecoration(
+                                      color: kLivedAmber,
+                                      shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: kLivedAmber,
+                                          blurRadius: 8,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  const SizedBox(width: AppSpacing.sm),
+                                  Text(
+                                    'Daymark',
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                          letterSpacing: 0.6,
+                                        ),
+                                  ),
+                                ],
+                              ),
+                              Material(
+                                color: Colors.white.withValues(alpha: 0.12),
+                                shape: const CircleBorder(),
+                                child: IconButton(
+                                  tooltip: 'Settings',
+                                  icon: const Icon(
+                                    Icons.settings_outlined,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () => context.push('/settings'),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: SkyHero(
                     greeting: _greeting,
                     completed: state.completed,
                     total: state.total,
                     progress: state.progress,
                     loading: loading,
-                    onSettings: () => context.push('/settings'),
+                    hideAppBar: true,
                   ),
-                  if (state.status == HomeStatus.error)
-                    const Padding(
-                      padding: EdgeInsets.all(AppSpacing.md),
+                ),
+                if (state.status == HomeStatus.error)
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: const EdgeInsets.all(AppSpacing.md),
                       child: _ErrorNote(),
-                    )
-                  else if (!loading)
-                    ..._sections(context, state),
-                ],
-              ),
+                    ),
+                  )
+                else if (!loading)
+                  SliverList(
+                    delegate: SliverChildListDelegate(
+                      _sections(context, state),
+                    ),
+                  ),
+              ],
             );
           },
         ),
