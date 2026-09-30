@@ -1,7 +1,83 @@
+// import 'package:go_router/go_router.dart';
+
+// import '../../features/home/pages/home_page.dart';
+// import '../../features/bucket_list/pages/bucket_list_page.dart';
+// import '../../features/memories/pages/memories_page.dart';
+// import '../../features/add_item/pages/add_item_page.dart';
+// import '../../features/item_details/pages/item_details_page.dart';
+// import '../../features/settings/pages/settings_page.dart';
+// import '../../features/splash/pages/splash_page.dart';
+// import 'app_shell.dart';
+
+// /// Root navigation graph. The bottom-nav tabs (home, bucket-list, memories)
+// /// live under a StatefulShellRoute so each tab keeps its own scroll/state,
+// /// and the selected nav index always matches the current route.
+// final GoRouter appRouter = GoRouter(
+//   // initialLocation: '/',
+//   initialLocation: '/splash',
+//   routes: [
+//     GoRoute(
+//       path: '/splash',
+//       builder: (context, state) =>
+//           SplashPage(onFinished: () => appRouter.go('/')),
+//     ),
+//     StatefulShellRoute.indexedStack(
+//       builder: (context, state, navigationShell) =>
+//           AppShell(navigationShell: navigationShell),
+//       branches: [
+//         StatefulShellBranch(
+//           routes: [
+//             GoRoute(path: '/', builder: (context, state) => const HomePage()),
+//           ],
+//         ),
+//         StatefulShellBranch(
+//           routes: [
+//             GoRoute(
+//               path: '/bucket-list',
+//               builder: (context, state) => const BucketListPage(),
+//               routes: [
+//                 GoRoute(
+//                   path: 'add',
+//                   builder: (context, state) => const AddItemPage(),
+//                 ),
+//                 GoRoute(
+//                   path: ':id',
+//                   builder: (context, state) =>
+//                       ItemDetailsPage(itemId: state.pathParameters['id']!),
+//                   routes: [
+//                     GoRoute(
+//                       path: 'edit',
+//                       builder: (context, state) =>
+//                           AddItemPage(itemId: state.pathParameters['id']),
+//                     ),
+//                   ],
+//                 ),
+//               ],
+//             ),
+//           ],
+//         ),
+//         StatefulShellBranch(
+//           routes: [
+//             GoRoute(
+//               path: '/memories',
+//               builder: (context, state) => const MemoriesPage(),
+//             ),
+//           ],
+//         ),
+//       ],
+//     ),
+//     GoRoute(
+//       path: '/settings',
+//       builder: (context, state) => const SettingsPage(),
+//     ),
+//   ],
+// );
+
 import 'package:go_router/go_router.dart';
 
 import '../../features/home/pages/home_page.dart';
 import '../../features/bucket_list/pages/bucket_list_page.dart';
+import '../../features/memories/pages/memories_editor_page.dart';
 import '../../features/memories/pages/memories_page.dart';
 import '../../features/add_item/pages/add_item_page.dart';
 import '../../features/item_details/pages/item_details_page.dart';
@@ -9,11 +85,18 @@ import '../../features/settings/pages/settings_page.dart';
 import '../../features/splash/pages/splash_page.dart';
 import 'app_shell.dart';
 
-/// Root navigation graph. The bottom-nav tabs (home, bucket-list, memories)
-/// live under a StatefulShellRoute so each tab keeps its own scroll/state,
-/// and the selected nav index always matches the current route.
+/// Root navigation graph. The app opens on the splash route, which hands
+/// off to the tabbed shell once its launch animation completes. The
+/// bottom-nav tabs (home, bucket-list, memories) live under a
+/// StatefulShellRoute so each tab keeps its own scroll/state, and the
+/// selected nav index always matches the current route.
+///
+/// The memory editor (`/memory/:id`) is a top-level route rather than
+/// nested under either the bucket-list or memories branch, since it's
+/// reachable from both (item details' "Add memory" prompt, and tapping a
+/// memories-tab card) — keeping it outside the shell avoids any cross-
+/// branch navigation ambiguity about which tab's stack it belongs to.
 final GoRouter appRouter = GoRouter(
-  // initialLocation: '/',
   initialLocation: '/splash',
   routes: [
     GoRoute(
@@ -65,6 +148,11 @@ final GoRouter appRouter = GoRouter(
           ],
         ),
       ],
+    ),
+    GoRoute(
+      path: '/memory/:id',
+      builder: (context, state) =>
+          MemoryEditorPage(itemId: state.pathParameters['id']!),
     ),
     GoRoute(
       path: '/settings',

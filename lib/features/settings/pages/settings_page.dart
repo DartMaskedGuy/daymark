@@ -57,7 +57,9 @@ class SettingsPage extends StatelessWidget {
           const ListTile(
             contentPadding: EdgeInsets.zero,
             title: Text('About Daymark'),
-            subtitle: Text('Keep track of the things you want to live, and the ones you already have.'),
+            subtitle: Text(
+              'Keep track of the things you want to live, and the ones you already have.',
+            ),
           ),
         ],
       ),
