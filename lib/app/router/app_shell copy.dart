@@ -183,29 +183,31 @@ class _NavItem extends StatelessWidget {
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
+            mainAxisSize: MainAxisSize.max,
             children: [
               Icon(
                 selected ? destination.activeIcon : destination.icon,
                 color: color,
                 size: 22,
               ),
-              ClipRect(
-                child: AnimatedAlign(
-                  duration: const Duration(milliseconds: 220),
-                  curve: Curves.easeOutCubic,
-                  alignment: Alignment.centerLeft,
-                  widthFactor: selected ? 1 : 0,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 6),
-                    child: Text(
-                      destination.label,
-                      maxLines: 1,
-                      softWrap: false,
-                      style: theme.textTheme.labelSmall?.copyWith(
-                        color: color,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 12.5,
+              Expanded(
+                child: ClipRect(
+                  child: AnimatedAlign(
+                    duration: const Duration(milliseconds: 220),
+                    curve: Curves.easeOutCubic,
+                    alignment: Alignment.centerLeft,
+                    widthFactor: selected ? 1 : 0,
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 6),
+                      child: Text(
+                        destination.label,
+                        maxLines: 1,
+                        softWrap: false,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                          color: color,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 12.5,
+                        ),
                       ),
                     ),
                   ),
